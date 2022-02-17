@@ -70,11 +70,11 @@ app.use(async (ctx) => {
 
   switch (method) {
     case 'allTickets':
-      ctx.response.body = tickets;
+      ctx.response = tickets;
       return;
 
     default:
-      ctx.response.status = 418;
+      ctx.response.status = 404;
       return;
   }
 });
