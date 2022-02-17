@@ -70,7 +70,7 @@ app.use(async (ctx) => {
 
   switch (method) {
     case 'allTickets':
-      ctx.response.headers = tickets;
+      ctx.response.body = tickets;
       return;
 
     default:
