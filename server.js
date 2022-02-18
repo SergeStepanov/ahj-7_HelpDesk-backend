@@ -30,6 +30,7 @@ app.use(
     urlencoded: true,
     multipart: true,
     json: true,
+    text: true,
   }),
 );
 
