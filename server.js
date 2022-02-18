@@ -1,22 +1,6 @@
 /* eslint-disable no-useless-return */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-await */
-// const tickets = [
-//   {
-//     id: '1',
-//     name: 'Короткое описание',
-//     description: 'полное описание задачи',
-//     status: 'false',
-//     created: '2017-02-03 12:13',
-//   },
-//   {
-//     id: '2',
-//     name: 'Короткое описание 2',
-//     description: 'полное описание задачи 2',
-//     status: 'true',
-//     created: '2020-02-03 12:13',
-//   },
-// ];
 import tickets from './tickets';
 
 const http = require('http');
@@ -25,6 +9,7 @@ const koaBody = require('koa-body');
 
 const app = new Koa();
 
+// koaBody
 app.use(
   koaBody({
     urlencoded: true,
@@ -34,6 +19,7 @@ app.use(
   }),
 );
 
+// CORS
 app.use(async (ctx, next) => {
   const origin = ctx.request.get('Origin');
   if (!origin) return await next();
@@ -67,12 +53,20 @@ app.use(async (ctx, next) => {
   }
 });
 
+// response
+
 app.use(async (ctx) => {
   const { method } = ctx.request.query;
+  const res = tickets.map(({
+    id, name, status, created,
+  }) => ({
+    id,
+  }));
 
   switch (method) {
     case 'allTickets':
-      ctx.response.body = tickets;
+      // ????
+      ctx.response.body = JSON.stringify(res);
       return;
 
     default:
@@ -81,5 +75,6 @@ app.use(async (ctx) => {
   }
 });
 
+// Server
 const port = process.env.PORT || 7070;
 http.createServer(app.callback()).listen(port);
