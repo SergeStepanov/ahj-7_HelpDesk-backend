@@ -1,22 +1,23 @@
 /* eslint-disable no-useless-return */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-await */
-const tickets = [
-  {
-    id: '1',
-    name: 'Короткое описание',
-    description: 'полное описание задачи',
-    status: 'false',
-    created: '2017-02-03 12:13',
-  },
-  {
-    id: '2',
-    name: 'Короткое описание 2',
-    description: 'полное описание задачи 2',
-    status: 'true',
-    created: '2020-02-03 12:13',
-  },
-];
+// const tickets = [
+//   {
+//     id: '1',
+//     name: 'Короткое описание',
+//     description: 'полное описание задачи',
+//     status: 'false',
+//     created: '2017-02-03 12:13',
+//   },
+//   {
+//     id: '2',
+//     name: 'Короткое описание 2',
+//     description: 'полное описание задачи 2',
+//     status: 'true',
+//     created: '2020-02-03 12:13',
+//   },
+// ];
+import tickets from './tickets';
 
 const http = require('http');
 const Koa = require('koa');
@@ -66,7 +67,7 @@ app.use(async (ctx, next) => {
 });
 
 app.use(async (ctx) => {
-  const { method } = ctx.request.querystring;
+  const { method } = ctx.request.query;
 
   switch (method) {
     case 'allTickets':
