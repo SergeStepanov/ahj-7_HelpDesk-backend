@@ -9,18 +9,18 @@ const tickets = [
     status: 'false',
     created: '2017-02-03 12:13',
   },
-  {
-    id: '2',
-    name: 'Задача 2',
-    description: 'полное описание задачи 2',
-    status: 'true',
-    created: '2020-02-03 12:13',
-  },
+  // {
+  //   id: '2',
+  //   name: 'Задача 2',
+  //   description: 'полное описание задачи 2',
+  //   status: 'true',
+  //   created: '2020-02-03 12:13',
+  // },
   {
     id: '3',
     name: 'Задача 3',
     description: 'полное описание задачи 3',
-    status: 'faise',
+    status: 'false',
     created: '2021-23-03 12:13',
   },
 ];
@@ -28,8 +28,35 @@ const tickets = [
 const http = require('http');
 const Koa = require('koa');
 const koaBody = require('koa-body');
+const uuid = require('uuid');
+const moment = require('moment');
+
+moment.locale('ru');
 
 const app = new Koa();
+
+// test push ticket
+tickets.push({
+  id: uuid.v4(),
+  name: 'Задача 5',
+  description: 'полное описание задачи 5',
+  status: 'false',
+  created: `${moment().format('L')} ${moment().format('LT')}`,
+});
+tickets.push({
+  id: uuid.v4(),
+  name: 'Задача 6',
+  description: 'полное описание задачи 6',
+  status: 'false',
+  created: `${moment().format('L')} ${moment().format('LT')}`,
+});
+tickets.push({
+  id: uuid.v4(),
+  name: 'Задача 32',
+  description: 'полное описание задачи 32',
+  status: 'false',
+  created: `${moment().format('L')} ${moment().format('LT')}`,
+});
 
 // koaBody
 app.use(
@@ -79,7 +106,9 @@ app.use(async (ctx, next) => {
 
 app.use(async (ctx) => {
   const { method } = ctx.request.query;
-  const reqTicId = ctx.request.query.id;
+  const reqId = ctx.request.query.id;
+  const reqName = ctx.request.body.name;
+  const reqDescription = ctx.request.body.description;
 
   switch (method) {
     case 'allTickets':
@@ -96,11 +125,47 @@ app.use(async (ctx) => {
       return;
 
     case 'ticketById':
-      ctx.response.body = JSON.stringify(
-        tickets
-          .map(({ id, description }) => ({ id, description }))
-          .find(({ id }) => id === reqTicId),
-      );
+      if (reqId) {
+        ctx.response.body = JSON.stringify(
+          tickets.find(({ id }) => id === reqId),
+        );
+      } else {
+        ctx.response.status = 404;
+      }
+      return;
+
+    case 'createTicket':
+      tickets.push({
+        id: uuid.v4(),
+        name: reqName,
+        description: reqDescription,
+        status: 'false',
+        created: `${moment().format('L')} ${moment().format('LT')}`,
+      });
+
+      ctx.response.body = JSON.stringify(tickets);
+      return;
+
+    case 'editTicket':
+      if (reqId) {
+        const i = tickets.findIndex(({ id }) => id === reqId);
+        tickets[i].name = reqName;
+        tickets[i].description = reqDescription;
+        ctx.response.body = true;
+      } else {
+        ctx.response.status = 404;
+      }
+
+      return;
+
+    case 'deleteTicket':
+      if (reqId) {
+        const i = tickets.findIndex(({ id }) => id === reqId);
+        tickets[i].splice(i, 1);
+        ctx.response.body = true;
+      } else {
+        ctx.response.status = 404;
+      }
       return;
 
     default:
