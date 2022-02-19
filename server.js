@@ -1,7 +1,29 @@
 /* eslint-disable no-useless-return */
 /* eslint-disable consistent-return */
 /* eslint-disable no-return-await */
-import tickets from './tickets';
+const tickets = [
+  {
+    id: '1',
+    name: 'Задача',
+    description: 'полное описание задачи',
+    status: 'false',
+    created: '2017-02-03 12:13',
+  },
+  {
+    id: '2',
+    name: 'Задача 2',
+    description: 'полное описание задачи 2',
+    status: 'true',
+    created: '2020-02-03 12:13',
+  },
+  {
+    id: '3',
+    name: 'Задача 3',
+    description: 'полное описание задачи 3',
+    status: 'faise',
+    created: '2021-23-03 12:13',
+  },
+];
 
 const http = require('http');
 const Koa = require('koa');
@@ -57,16 +79,28 @@ app.use(async (ctx, next) => {
 
 app.use(async (ctx) => {
   const { method } = ctx.request.query;
-  const res = tickets.map(({
-    id, name, status, created,
-  }) => ({
-    id,
-  }));
+  const reqTicId = ctx.request.query.id;
 
   switch (method) {
     case 'allTickets':
-      // ????
-      ctx.response.body = JSON.stringify(res);
+      ctx.response.body = JSON.stringify(
+        tickets.map(({
+          id, name, status, created,
+        }) => ({
+          id,
+          name,
+          status,
+          created,
+        })),
+      );
+      return;
+
+    case 'ticketById':
+      ctx.response.body = JSON.stringify(
+        tickets
+          .map(({ id, description }) => ({ id, description }))
+          .find(({ id }) => id === reqTicId),
+      );
       return;
 
     default:
