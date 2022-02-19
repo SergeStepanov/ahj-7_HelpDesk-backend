@@ -9,13 +9,13 @@ const tickets = [
     status: 'false',
     created: '2017-02-03 12:13',
   },
-  // {
-  //   id: '2',
-  //   name: 'Задача 2',
-  //   description: 'полное описание задачи 2',
-  //   status: 'true',
-  //   created: '2020-02-03 12:13',
-  // },
+  {
+    id: '2',
+    name: 'Задача 2',
+    description: 'полное описание задачи 2',
+    status: 'true',
+    created: '2020-02-03 12:13',
+  },
   {
     id: '3',
     name: 'Задача 3',
@@ -109,6 +109,7 @@ app.use(async (ctx) => {
   const reqId = ctx.request.query.id;
   const reqName = ctx.request.body.name;
   const reqDescription = ctx.request.body.description;
+  const ind = tickets.findIndex(({ id }) => id === reqId);
 
   switch (method) {
     case 'allTickets':
@@ -147,25 +148,15 @@ app.use(async (ctx) => {
       return;
 
     case 'editTicket':
-      if (reqId) {
-        const i = tickets.findIndex(({ id }) => id === reqId);
-        tickets[i].name = reqName;
-        tickets[i].description = reqDescription;
-        ctx.response.body = true;
-      } else {
-        ctx.response.status = 404;
-      }
+      tickets[ind].name = reqName;
+      tickets[ind].description = reqDescription;
+      ctx.response.body = true;
 
       return;
 
     case 'deleteTicket':
-      if (reqId) {
-        const i = tickets.findIndex(({ id }) => id === reqId);
-        tickets[i].splice(i, 1);
-        ctx.response.body = true;
-      } else {
-        ctx.response.status = 404;
-      }
+      tickets[ind].splice(ind, 1);
+      ctx.response.body = true;
       return;
 
     default:
