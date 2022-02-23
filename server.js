@@ -105,10 +105,11 @@ app.use(async (ctx, next) => {
 // response
 
 app.use(async (ctx) => {
-  const { method } = ctx.request.query;
-  const reqId = ctx.request.query.id;
-  const reqName = ctx.request.body.name;
-  const reqDescription = ctx.request.body.description;
+  const { method, id: reqId } = ctx.request.query;
+  // const reqId = ctx.request.query.id;
+  const { name: reqName, description: reqDescription } = ctx.request.body;
+  // const reqName = ctx.request.body.name;
+  // const reqDescription = ctx.request.body.description;
   const ind = tickets.findIndex(({ id }) => id === reqId);
 
   switch (method) {
