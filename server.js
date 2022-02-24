@@ -65,7 +65,7 @@ app.use(
     multipart: true,
     json: true,
     text: true,
-  }),
+  })
 );
 
 // CORS
@@ -94,7 +94,7 @@ app.use(async (ctx, next) => {
     if (ctx.request.get('Access-Control-Request-Headers')) {
       ctx.response.set(
         'Access-Control-Request-Headers',
-        ctx.request.get('Access-Control-Request-Headers'),
+        ctx.request.get('Access-Control-Request-Headers')
       );
     }
 
@@ -115,21 +115,19 @@ app.use(async (ctx) => {
   switch (method) {
     case 'allTickets':
       ctx.response.body = JSON.stringify(
-        tickets.map(({
-          id, name, status, created,
-        }) => ({
+        tickets.map(({ id, name, status, created }) => ({
           id,
           name,
           status,
           created,
-        })),
+        }))
       );
       return;
 
     case 'ticketById':
       if (reqId) {
         ctx.response.body = JSON.stringify(
-          tickets.find(({ id }) => id === reqId),
+          tickets.find(({ id }) => id === reqId)
         );
       } else {
         ctx.response.status = 404;
@@ -137,15 +135,17 @@ app.use(async (ctx) => {
       return;
 
     case 'createTicket':
-      tickets.push({
+      // eslint-disable-next-line no-case-declarations
+      const newTicket = {
         id: uuid.v4(),
         name: reqName,
         description: reqDescription,
         status: 'false',
         created: `${moment().format('L')} ${moment().format('LT')}`,
-      });
+      };
+      tickets.push(newTicket);
 
-      ctx.response.body = JSON.stringify(tickets);
+      ctx.response.body = JSON.stringify(newTicket);
       return;
 
     case 'editTicket':
