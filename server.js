@@ -145,7 +145,7 @@ app.use(async (ctx) => {
       };
       tickets.push(newTicket);
 
-      ctx.response.body = JSON.stringify(newTicket);
+      ctx.response.body = JSON.stringify([newTicket]);
       return;
 
     case 'editTicket':
