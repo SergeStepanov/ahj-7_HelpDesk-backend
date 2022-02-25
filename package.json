@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/SergeStepanov/ahj-7_HelpDesk-backend#readme",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "forever": "^0.14.2",
     "koa": "^2.13.4",
     "koa-body": "^4.2.0",

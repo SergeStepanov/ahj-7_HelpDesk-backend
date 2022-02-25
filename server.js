@@ -30,6 +30,7 @@ const Koa = require('koa');
 const koaBody = require('koa-body');
 const uuid = require('uuid');
 const moment = require('moment');
+const cors = require('@koa/cors');
 
 moment.locale('ru');
 
@@ -65,10 +66,11 @@ app.use(
     multipart: true,
     json: true,
     text: true,
-  })
+  }),
 );
 
 // CORS
+app.use(cors());
 app.use(async (ctx, next) => {
   const origin = ctx.request.get('Origin');
   if (!origin) return await next();
@@ -94,7 +96,7 @@ app.use(async (ctx, next) => {
     if (ctx.request.get('Access-Control-Request-Headers')) {
       ctx.response.set(
         'Access-Control-Request-Headers',
-        ctx.request.get('Access-Control-Request-Headers')
+        ctx.request.get('Access-Control-Request-Headers'),
       );
     }
 
@@ -115,19 +117,21 @@ app.use(async (ctx) => {
   switch (method) {
     case 'allTickets':
       ctx.response.body = JSON.stringify(
-        tickets.map(({ id, name, status, created }) => ({
+        tickets.map(({
+          id, name, status, created,
+        }) => ({
           id,
           name,
           status,
           created,
-        }))
+        })),
       );
       return;
 
     case 'ticketById':
       if (reqId) {
         ctx.response.body = JSON.stringify(
-          tickets.find(({ id }) => id === reqId)
+          tickets.find(({ id }) => id === reqId),
         );
       } else {
         ctx.response.status = 404;
