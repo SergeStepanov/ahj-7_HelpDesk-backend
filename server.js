@@ -108,11 +108,7 @@ app.use(async (ctx, next) => {
 
 app.use(async (ctx) => {
   const { method, id: reqId } = ctx.request.query;
-  // const reqId = ctx.request.query.id;
   const { name: reqName, description: reqDescription } = ctx.request.body;
-  // const reqName = ctx.request.body.name;
-  // const reqDescription = ctx.request.body.description;
-  const ind = tickets.findIndex(({ id }) => id === reqId);
 
   switch (method) {
     case 'allTickets':
@@ -153,15 +149,29 @@ app.use(async (ctx) => {
       return;
 
     case 'editTicket':
-      tickets[ind].name = reqName;
-      tickets[ind].description = reqDescription;
-      ctx.response.body = true;
+      // eslint-disable-next-line no-case-declarations
+      const index = tickets.find(({ id }) => id === reqId);
+
+      index.name = reqName;
+      index.description = reqDescription;
+      ctx.response.body = JSON.stringify(index);
 
       return;
 
     case 'deleteTicket':
-      tickets[ind].splice(ind, 1);
-      ctx.response.body = true;
+      // eslint-disable-next-line no-case-declarations
+      const ind = tickets.findIndex(({ id }) => id === reqId);
+
+      tickets.splice(ind, 1);
+      ctx.response.body = JSON.stringify(true);
+      return;
+
+    case 'ticketStatus':
+      // eslint-disable-next-line no-case-declarations
+      const statusTic = tickets.find(({ id }) => id === reqId);
+      statusTic.status = true;
+      ctx.response.body = JSON.stringify(statusTic);
+
       return;
 
     default:
